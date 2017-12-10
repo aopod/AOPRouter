@@ -1,0 +1,12 @@
+use_frameworks!
+
+target 'AOPRouter_Example' do
+  pod 'AOPRouter', :path => '../'
+
+  target 'AOPRouter-Example_Tests' do
+    inherit! :search_paths
+
+    pod 'Specta'
+  pod 'Expecta'
+  end
+end
