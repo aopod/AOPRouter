@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'AOPRouter'
-  s.version          = '1.0.0'
+  s.version          = '1.0.1'
   s.summary          = 'A URL routing solution for iOS'
   s.description      = <<-DESC
 A URL routing solution for iOS. With features such as autocomplete, comment, duplication check, miss handler, etc.
@@ -25,6 +25,4 @@ A URL routing solution for iOS. With features such as autocomplete, comment, dup
   s.source_files = 'AOPRouter/**/*'
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
 end

@@ -73,8 +73,8 @@
     int metamacro_concat(_aop_router$miss_handler$checker$,aop_metamacro_concat_with_sep($,__VA_ARGS__)) __attribute((used, section("__DATA,AOPRouterChecker ")));
 #endif
 
-#ifndef _AOPRouterCheckDuplicate
-    #define _AOPRouterCheckDuplicate(...)
+#ifndef _AOPRouterDuplicationCheck
+    #define _AOPRouterDuplicationCheck(...)
 #endif
 
 #ifndef _AOPRouterMissHandlerDuplicationCheck
