@@ -122,7 +122,7 @@ _AOPRouterDuplicationCheck(SCHEME,HOST,##__VA_ARGS__) \
  
  @param PATH Property name specifies a url
  */
-#define kAOPRouterPath(PATH) [AOPRouterHandler sharedInstance].PATH
+#define kAOPRouterPath(PATH) [AOPRouterHandler shared].PATH
 
 /**
  Call `open` method using propery (Need to import corresponding class header)

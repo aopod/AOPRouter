@@ -13,7 +13,7 @@
 
 @interface AOPRouter : NSObject
 
-+ (AOPRouterConfig *)config;
+@property (class, nonatomic, strong, readonly) AOPRouterConfig *config;
 
 #pragma mark - Public Interfaces
 

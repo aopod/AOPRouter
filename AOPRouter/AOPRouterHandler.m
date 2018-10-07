@@ -9,7 +9,7 @@
 
 @implementation AOPRouterHandler
 
-+ (instancetype)sharedInstance
++ (instancetype)shared
 {
     static id _shared = nil;
     static dispatch_once_t onceToken;
@@ -19,7 +19,7 @@
     return _shared;
 }
 
-// Implement a route
+// How to implement a route
 /*
 - AOPRouterMethodImpl(+,scheme,host,path1,path2)
 {

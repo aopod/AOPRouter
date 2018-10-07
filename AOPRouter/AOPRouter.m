@@ -10,6 +10,16 @@
 
 @implementation AOPRouter
 
++ (AOPRouterConfig *)config
+{
+    static AOPRouterConfig *_config = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _config = AOPRouterConfig.new;
+    });
+    return _config;
+}
+
 #pragma mark - Public Interfaces
 
 + (void)open:(NSString *)urlString
@@ -138,7 +148,7 @@
     if (hasPublicSelector && forcePublic) {
         target = AOPRouterHandler.class;
     } else if (hasPrivateSelector) {
-        target = [AOPRouterHandler sharedInstance];
+        target = AOPRouterHandler.shared;
     } else {
         target = AOPRouterHandler.class;
     }
@@ -150,12 +160,13 @@
         invocation.selector = selector;
         AOPRouterContext volatile *aContext = context;
         [invocation setArgument:&aContext atIndex:2];
+        [invocation retainArguments];
         [invocation invoke];
     });
 }
 
 /**
- General miss handler.
+ Default miss handler.
  No need to return value.
  
  @param context AOPRouterContext instance
@@ -165,17 +176,6 @@
     if (self.config.defaultMissHandler) {
         self.config.defaultMissHandler(context);
     }
-}
-
-#pragma mark - Getter
-+ (AOPRouterConfig *)config
-{
-    static AOPRouterConfig *_config = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _config = AOPRouterConfig.new;
-    });
-    return _config;
 }
 
 @end

@@ -14,7 +14,7 @@
  */
 @interface AOPRouterHandler : NSObject
 
-+ (instancetype)sharedInstance;
++ (instancetype)shared;
 
 // Declare a route, can have comment on it
 // @AOPRouterMethodName(scheme,host,path1,path2);
