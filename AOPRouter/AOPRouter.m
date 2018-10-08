@@ -63,7 +63,7 @@
             NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
             NSArray *queryItems = urlComponents.queryItems;
             for (NSURLQueryItem *queryItem in queryItems) {
-                [queries setObject:queryItem.value ?: @"" forKey:queryItem.name];
+                [queries setValue:queryItem.value forKey:queryItem.name];
             }
         }
         queries;
@@ -82,22 +82,24 @@
 
 + (void)openInternalWithContext:(AOPRouterContext *)context
 {
-    if (context.url.absoluteString == 0) {
+    NSURL *url = context.url;
+    if (url.absoluteString.length == 0) {
         dispatch_async(dispatch_get_main_queue(), ^{
             // Default miss handler
             [self missHandler:context];
         });
         return;
     }
-    NSURL *url = context.url;
     // Replace `-` with `$`, and replace `.` with `$$`
     NSString *scheme = [[url.scheme.lowercaseString
                          stringByReplacingOccurrencesOfString:@"-" withString:@"$"]
                         stringByReplacingOccurrencesOfString:@"." withString:@"$$"];
     NSString *host = url.host.lowercaseString;
-    NSArray *pathComponents = [url.pathComponents filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(NSString *  _Nullable path, NSDictionary<NSString *,id> * _Nullable bindings) {
-        return path.length > 0 && ![path isEqualToString:@"/"];
-    }]];
+    NSArray *pathComponents = [url.pathComponents filteredArrayUsingPredicate:({
+        [NSPredicate predicateWithBlock:^BOOL(NSString *  _Nullable path, NSDictionary<NSString *,id> * _Nullable bindings) {
+            return path.length > 0 && ![path isEqualToString:@"/"];
+        }];
+    })];
     NSString *selectorName = ({
         NSArray *components = [@[host] arrayByAddingObjectsFromArray:pathComponents];
         NSString *selectorName = [NSString stringWithFormat:@"route_%@:%@:", scheme, [components componentsJoinedByString:@"$"]];
@@ -123,13 +125,7 @@
                 NSString *selectorName = [NSString stringWithFormat:@"missHandler:%@:", [components componentsJoinedByString:@"$"]];
                 SEL selector = NSSelectorFromString(selectorName);
                 if ([AOPRouterHandler respondsToSelector:selector]) {
-                    NSMethodSignature *methodSignature = [AOPRouterHandler methodSignatureForSelector:selector];
-                    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
-                    invocation.target = AOPRouterHandler.class;
-                    invocation.selector = selector;
-                    AOPRouterContext volatile *aContext = context;
-                    [invocation setArgument:&aContext atIndex:2];
-                    [invocation invoke];
+                    NSInvocation *invocation = [self invokeWithTarget:AOPRouterHandler.class selector:selector context:context];
                     [invocation getReturnValue:&canHandle];
                 }
                 if (canHandle) {
@@ -154,14 +150,7 @@
     }
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSMethodSignature *methodSignature = [target methodSignatureForSelector:selector];
-        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
-        invocation.target = target;
-        invocation.selector = selector;
-        AOPRouterContext volatile *aContext = context;
-        [invocation setArgument:&aContext atIndex:2];
-        [invocation retainArguments];
-        [invocation invoke];
+        [self invokeWithTarget:target selector:selector context:context];
     });
 }
 
@@ -176,6 +165,20 @@
     if (self.config.defaultMissHandler) {
         self.config.defaultMissHandler(context);
     }
+}
+
++ (NSInvocation *)invokeWithTarget:(id)target
+                          selector:(SEL)selector
+                           context:(AOPRouterContext *)context
+{
+    NSMethodSignature *methodSignature = [target methodSignatureForSelector:selector];
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
+    invocation.target = target;
+    invocation.selector = selector;
+    [invocation setArgument:&context atIndex:2];
+    [invocation retainArguments];
+    [invocation invoke];
+    return invocation;
 }
 
 @end
