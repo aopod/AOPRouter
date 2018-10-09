@@ -64,6 +64,13 @@
     [self.data addObject:[AOPDataModel modelWithTitle:@"Redirect" action:^{
         AOPRouterOpen(aop_blog_redirect);
     }]];
+    [self.data addObject:[AOPDataModel modelWithTitle:@"AOPRouter.open" action:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (!strongSelf) {
+            return;
+        }
+        AOPRouter.open(kAOPRouterPath(aop_vc_present)).animated(NO).parameter(@"from", strongSelf);
+    }]];
 }
 
 #pragma mark - UITableViewDelegate

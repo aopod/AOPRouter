@@ -10,10 +10,12 @@
 #import "AOPRouterContext.h"
 #import "AOPRouterConfig.h"
 #import "AOPRouterHandler.h"
+#import "AOPRouterOpenMediator.h"
 
 @interface AOPRouter : NSObject
 
 @property (class, nonatomic, strong, readonly) AOPRouterConfig *config;
+@property (class, nonatomic, strong, readonly) id<AOPRouterOpenMediator> (^open)(NSString *urlString);
 
 #pragma mark - Public Interfaces
 

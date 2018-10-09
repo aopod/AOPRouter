@@ -129,6 +129,6 @@ _AOPRouterDuplicationCheck(SCHEME,HOST,##__VA_ARGS__) \
  
  @param PATH Property name specifies a url
  */
-#define AOPRouterOpen(PATH) [AOPRouter open:kAOPRouterPath(PATH)]
+#define AOPRouterOpen(PATH) AOPRouter.open(kAOPRouterPath(PATH))
 
 

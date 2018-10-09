@@ -20,6 +20,11 @@
     return _config;
 }
 
++ (id<AOPRouterOpenMediator> (^)(NSString *))open
+{
+    return AOPRouterOpenMediator.open;
+}
+
 #pragma mark - Public Interfaces
 
 + (void)open:(NSString *)urlString
@@ -82,12 +87,15 @@
 
 + (void)openInternalWithContext:(AOPRouterContext *)context
 {
+    [self performSelectorOnMainThread:@selector(_openInternalWithContext:) withObject:context waitUntilDone:NO];
+}
+
++ (void)_openInternalWithContext:(AOPRouterContext *)context
+{
     NSURL *url = context.url;
     if (url.absoluteString.length == 0) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            // Default miss handler
-            [self missHandler:context];
-        });
+        // Default miss handler
+        [self missHandler:context];
         return;
     }
     // Replace `-` with `$`, and replace `.` with `$$`
@@ -117,26 +125,24 @@
         hasPrivateSelector = YES;
     }
     if (!hasPublicSelector && !hasPrivateSelector) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            BOOL canHandle = NO;
-            // Find available miss handler
-            NSMutableArray *components = [@[scheme,host] arrayByAddingObjectsFromArray:pathComponents].mutableCopy;
-            while (components.count > 0) {
-                NSString *selectorName = [NSString stringWithFormat:@"missHandler:%@:", [components componentsJoinedByString:@"$"]];
-                SEL selector = NSSelectorFromString(selectorName);
-                if ([AOPRouterHandler respondsToSelector:selector]) {
-                    NSInvocation *invocation = [self invokeWithTarget:AOPRouterHandler.class selector:selector context:context];
-                    [invocation getReturnValue:&canHandle];
-                }
-                if (canHandle) {
-                    break;
-                }
-                [components removeLastObject];
+        BOOL canHandle = NO;
+        // Find available miss handler
+        NSMutableArray *components = [@[scheme,host] arrayByAddingObjectsFromArray:pathComponents].mutableCopy;
+        while (components.count > 0) {
+            NSString *selectorName = [NSString stringWithFormat:@"missHandler:%@:", [components componentsJoinedByString:@"$"]];
+            SEL selector = NSSelectorFromString(selectorName);
+            if ([AOPRouterHandler respondsToSelector:selector]) {
+                NSInvocation *invocation = [self invokeWithTarget:AOPRouterHandler.class selector:selector context:context];
+                [invocation getReturnValue:&canHandle];
             }
-            if (!canHandle) {
-                [self missHandler:context];
+            if (canHandle) {
+                break;
             }
-        });
+            [components removeLastObject];
+        }
+        if (!canHandle) {
+            [self missHandler:context];
+        }
         return;
     }
     
@@ -149,9 +155,7 @@
         target = AOPRouterHandler.class;
     }
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self invokeWithTarget:target selector:selector context:context];
-    });
+    [self invokeWithTarget:target selector:selector context:context];
 }
 
 /**
