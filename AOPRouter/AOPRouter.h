@@ -10,7 +10,7 @@
 #import "AOPRouterContext.h"
 #import "AOPRouterConfig.h"
 #import "AOPRouterHandler.h"
-#import "AOPRouterOpenMediator.h"
+#import "AOPRouterOpenMediatorProtocol.h"
 
 @interface AOPRouter : NSObject
 

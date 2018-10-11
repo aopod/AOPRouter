@@ -6,16 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
-@protocol AOPRouterOpenMediator
-
-@property (nonatomic, strong, readonly) id<AOPRouterOpenMediator> (^animated)(BOOL animated);
-@property (nonatomic, strong, readonly) id<AOPRouterOpenMediator> (^forcePublic)(BOOL forcePublic);
-@property (nonatomic, strong, readonly) id<AOPRouterOpenMediator> (^parameter)(id<NSCopying> key, id value);
-@property (nonatomic, strong, readonly) id<AOPRouterOpenMediator> (^parameters)(NSDictionary *parameters);
-@property (nonatomic, strong, readonly) id<AOPRouterOpenMediator> (^setParameter)(id<NSCopying> key, id value);
-
-@end
+#import "AOPRouterOpenMediatorProtocol.h"
 
 @interface AOPRouterOpenMediator : NSObject
 

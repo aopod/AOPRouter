@@ -131,4 +131,5 @@ _AOPRouterDuplicationCheck(SCHEME,HOST,##__VA_ARGS__) \
  */
 #define AOPRouterOpen(PATH) AOPRouter.open(kAOPRouterPath(PATH))
 
+#define AOPRouterHandleVC self.class context:context
 

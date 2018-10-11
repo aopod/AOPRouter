@@ -7,6 +7,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class AOPRouterContext;
+
 /**
  * Route Handler
  *
@@ -18,5 +20,7 @@
 
 // Declare a route, can have comment on it
 // @AOPRouterMethodName(scheme,host,path1,path2);
+
++ (void)context:(AOPRouterContext *)context handle:(id)object default:(void (^)(id object))defaultAction;
 
 @end

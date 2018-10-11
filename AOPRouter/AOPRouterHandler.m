@@ -6,6 +6,7 @@
 //
 
 #import "AOPRouterHandler.h"
+#import "AOPRouterContext.h"
 
 @implementation AOPRouterHandler
 
@@ -27,5 +28,16 @@
     AOPRouterContext *aContext = context;
 }
  */
+
++ (void)context:(AOPRouterContext *)context handle:(id)object default:(void (^)(id object))defaultAction
+{
+    if (context.handle) {
+        context.handle(object, context);
+        return;
+    }
+    if (defaultAction) {
+        defaultAction(object);
+    }
+}
 
 @end

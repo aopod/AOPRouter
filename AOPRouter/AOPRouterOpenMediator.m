@@ -46,12 +46,12 @@
     return block;
 }
 
-- (id<AOPRouterOpenMediator> (^)(BOOL))forcePublic
+- (id<AOPRouterOpenMediator> (^)(BOOL))enableInternal
 {
     __weak typeof(self) weakSelf = self;
-    id<AOPRouterOpenMediator> (^block)(BOOL) = ^id<AOPRouterOpenMediator>(BOOL forcePublic) {
+    id<AOPRouterOpenMediator> (^block)(BOOL) = ^id<AOPRouterOpenMediator>(BOOL enabled) {
         __strong typeof(weakSelf) self = weakSelf;
-        self.context.forcePublic = forcePublic;
+        self.context.forcePublic = !enabled;
         return self;
     };
     return block;
@@ -98,6 +98,17 @@
         NSMutableDictionary *parameters = (self.context.parameters ?: @{}).mutableCopy;
         [parameters setObject:value forKeyedSubscript:key];
         self.context.parameters = parameters;
+        return self;
+    };
+    return block;
+}
+
+- (id<AOPRouterOpenMediator> (^)(void (^)(id, AOPRouterContext *)))handle
+{
+    __weak typeof(self) weakSelf = self;
+    id<AOPRouterOpenMediator> (^block)(void (^)(id, AOPRouterContext *)) = ^id<AOPRouterOpenMediator>(void (^handle)(id, AOPRouterContext*)) {
+        __strong typeof(weakSelf) self = weakSelf;
+        self.context.handle = handle;
         return self;
     };
     return block;

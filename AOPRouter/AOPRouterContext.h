@@ -13,5 +13,6 @@
 @property (nonatomic, strong) NSDictionary *parameters;
 @property (nonatomic, assign) BOOL animated;
 @property (nonatomic, assign) BOOL forcePublic;                 ///< Force access scope to be public
+@property (nonatomic, copy  ) void (^handle)(id object, AOPRouterContext *context);
 
 @end
