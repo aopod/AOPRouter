@@ -8,21 +8,21 @@
 
 Pod::Spec.new do |s|
   s.name             = 'AOPRouter'
-  s.version          = '1.0.1'
+  s.version          = '1.1.0'
   s.summary          = 'A URL routing solution for iOS'
   s.description      = <<-DESC
-A URL routing solution for iOS. With features such as autocomplete, comment, duplication check, miss handler, etc.
+A URL routing solution for iOS. With features such as autocomplete, comment, duplication check, miss handler, chainable calls, etc.
                        DESC
 
   s.homepage         = 'https://github.com/aopod/AOPRouter'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'aopod' => 'aopodcom@gmail.com' }
   s.source           = { :git => 'https://github.com/aopod/AOPRouter.git', :tag => s.version.to_s }
-  s.social_media_url = 'http://www.aopod.com'
+  s.social_media_url = 'https://www.aopod.com'
 
   s.ios.deployment_target = '8.0'
 
   s.source_files = 'AOPRouter/**/*'
 
-  # s.public_header_files = 'Pod/Classes/**/*.h'
+  s.public_header_files = 'AOPRouter/**/*.h'
 end
