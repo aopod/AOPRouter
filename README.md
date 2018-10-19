@@ -8,6 +8,7 @@ A URL routing solution for iOS. With features such as:
 * Miss handler
 * Simple Public/Private access control
 * Xcode friendly
+* Chainable call
 * etc.
 
 ## Usage Examples
@@ -28,6 +29,11 @@ A URL routing solution for iOS. With features such as:
  */
 @AOPRouterMethodName(aop,blog,redirect);
 
+/**
+ Handle result
+*/
+@AOPRouterMethodName(aop,handle);
+
 @end
 
 @implementation AOPRouterHandler (Blog)
@@ -41,6 +47,15 @@ A URL routing solution for iOS. With features such as:
 {
     context.url = [NSURL URLWithString:kAOPRouterPath(aop_blog_open)];
     [AOPRouter openInternalWithContext:context];
+}
+
+- AOPRouterMethodImpl(+,aop,handle)
+{
+    UIViewController *fromVC = context.parameters[@"from"];
+    UIViewController *viewController = xxx;
+    [AOPRouterHandleVC handle:viewController default:^(__kindof UIViewController *vc) {
+        [fromVC presentViewController:vc animated:context.animated completion:nil];
+    }];
 }
 
 @end
@@ -69,6 +84,17 @@ A URL routing solution for iOS. With features such as:
                                   } animated:NO];
 
 AOPRouterOpen(aop_blog_redirect);
+
+// New way
+AOPRouter.open(@"aop://blog/open");
+
+AOPRouter.open(@"aop://blog/open").animated(NO).parameter(@"key", @"value");
+
+AOPRouterOpen(aop_blog_open).animated(NO).parameter(@"key", @"value");
+
+AOPRouterOpen(aop_handle).handle(^(UIViewController *vc, AOPRouterContext *context) {
+    [self presentViewController:vc animated:context.animated completion:nil];
+}))
 ```
 
 
@@ -100,6 +126,30 @@ it, simply add the following line to your Podfile:
 
 ```ruby
 pod 'AOPRouter'
+```
+
+## Updates
+
+### v1.0.0
+
+Initial version
+
+### v1.0.1
+
+Fix some bugs
+
+### v1.1.0
+
+Add chainable way to open like:
+
+```objc
+// Chainable
+AOPRouter.open(@"aop://blog").animated(NO).parameter(@"key", @"value");
+
+// Handle result manually
+AOPRouter.open(@"aop://blog").handle(^(id result, AOPRouterContext *context) {
+    // Do something
+});
 ```
 
 ## Author
