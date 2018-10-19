@@ -71,6 +71,15 @@
         }
         AOPRouter.open(kAOPRouterPath(aop_vc_present)).animated(NO).parameter(@"from", strongSelf);
     }]];
+    [self.data addObject:[AOPDataModel modelWithTitle:@"Using `handle` to present a ViewController" action:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (!strongSelf) {
+            return;
+        }
+        AOPRouterOpen(aop_vc_present_handlevc).animated(NO).handle(^(UIViewController *vc, AOPRouterContext *context) {
+            [strongSelf presentViewController:vc animated:context.animated completion:nil];
+        });
+    }]];
 }
 
 #pragma mark - UITableViewDelegate

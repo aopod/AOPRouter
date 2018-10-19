@@ -10,8 +10,13 @@
 @interface AOPRouterHandler (ViewController)
 
 /**
- * Present a secondary ViewController
+ Present a secondary ViewController
  */
 @AOPRouterMethodName(aop,vc,present);
+
+/**
+ Handle result manually and with a default action
+ */
+@AOPRouterMethodName(aop,vc,present,handlevc);
 
 @end
