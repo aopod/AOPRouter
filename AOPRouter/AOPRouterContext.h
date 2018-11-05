@@ -7,12 +7,16 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface AOPRouterContext : NSObject
 
 @property (nonatomic, strong) NSURL *url;
 @property (nonatomic, strong) NSDictionary *parameters;
 @property (nonatomic, assign) BOOL animated;
 @property (nonatomic, assign) BOOL forcePublic;                 ///< Force access scope to be public
-@property (nonatomic, copy  ) void (^handle)(id object, AOPRouterContext *context);
+@property (nonatomic, copy  ) void (^handle)(__nullable id object, AOPRouterContext *context);
 
 @end
+
+NS_ASSUME_NONNULL_END

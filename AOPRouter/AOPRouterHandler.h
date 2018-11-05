@@ -9,6 +9,8 @@
 
 @class AOPRouterContext;
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  * Route Handler
  *
@@ -21,6 +23,8 @@
 // Declare a route, can have comment on it
 // @AOPRouterMethodName(scheme,host,path1,path2);
 
-+ (void)context:(AOPRouterContext *)context handle:(id)object default:(void (^)(id object))defaultAction;
++ (void)context:(AOPRouterContext *)context handle:(__nullable id)object default:(void (^)(__nullable id object))defaultAction;
 
 @end
+
+NS_ASSUME_NONNULL_END

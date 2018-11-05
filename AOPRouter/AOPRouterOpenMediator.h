@@ -8,6 +8,8 @@
 #import <Foundation/Foundation.h>
 #import "AOPRouterOpenMediatorProtocol.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface AOPRouterOpenMediator : NSObject
 
 /**
@@ -17,4 +19,6 @@
 @property (class, nonatomic, strong, readonly) id<AOPRouterOpenMediator> (^open)(NSString *urlString);
 
 @end
+
+NS_ASSUME_NONNULL_END
 

@@ -9,11 +9,15 @@
 
 @class AOPRouterContext;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface AOPRouterConfig : NSObject
 
 /**
  Default missHandler implementation
  */
-@property (nonatomic, copy) void (^defaultMissHandler)(AOPRouterContext *context);
+@property (nonatomic, copy) void (^ __nullable defaultMissHandler)(AOPRouterContext *context);
 
 @end
+
+NS_ASSUME_NONNULL_END

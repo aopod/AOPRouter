@@ -12,6 +12,8 @@
 #import "AOPRouterHandler.h"
 #import "AOPRouterOpenMediatorProtocol.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface AOPRouter : NSObject
 
 @property (class, nonatomic, strong, readonly) AOPRouterConfig *config;
@@ -26,10 +28,12 @@
 
 + (void)openInternal:(NSString *)urlString;
 + (void)openInternal:(NSString *)urlString animated:(BOOL)animated;
-+ (void)openInternal:(NSString *)urlString parameters:(NSDictionary *)parameters;
-+ (void)openInternal:(NSString *)urlString parameters:(NSDictionary *)parameters animated:(BOOL)animated;
-+ (void)openInternal:(NSString *)urlString parameters:(NSDictionary *)parameters animated:(BOOL)animated forcePublic:(BOOL)forcePublic;
++ (void)openInternal:(NSString *)urlString parameters:(NSDictionary * _Nullable)parameters;
++ (void)openInternal:(NSString *)urlString parameters:(NSDictionary * _Nullable)parameters animated:(BOOL)animated;
++ (void)openInternal:(NSString *)urlString parameters:(NSDictionary * _Nullable)parameters animated:(BOOL)animated forcePublic:(BOOL)forcePublic;
 + (void)openInternalWithContext:(AOPRouterContext *)context;
 + (void)missHandler:(AOPRouterContext *)context;
 
 @end
+
+NS_ASSUME_NONNULL_END
