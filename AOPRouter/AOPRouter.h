@@ -16,7 +16,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface AOPRouter : NSObject
 
+/**
+ Router config
+ */
 @property (class, nonatomic, strong, readonly) AOPRouterConfig *config;
+
+/**
+ AOPRouter.open()
+ */
 @property (class, nonatomic, strong, readonly) id<AOPRouterOpenMediator> (^open)(NSString *urlString);
 
 #pragma mark - Public Interfaces
@@ -24,14 +31,18 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)open:(NSString *)urlString;
 + (void)open:(NSString *)urlString animated:(BOOL)animated;
 
-#pragma mark - Private Interfaces
+#pragma mark - Internal Interfaces
 
 + (void)openInternal:(NSString *)urlString;
 + (void)openInternal:(NSString *)urlString animated:(BOOL)animated;
 + (void)openInternal:(NSString *)urlString parameters:(NSDictionary * _Nullable)parameters;
 + (void)openInternal:(NSString *)urlString parameters:(NSDictionary * _Nullable)parameters animated:(BOOL)animated;
 + (void)openInternal:(NSString *)urlString parameters:(NSDictionary * _Nullable)parameters animated:(BOOL)animated forcePublic:(BOOL)forcePublic;
+
 + (void)openInternalWithContext:(AOPRouterContext *)context;
+
+#pragma mark - Default miss handler
+
 + (void)missHandler:(AOPRouterContext *)context;
 
 @end
