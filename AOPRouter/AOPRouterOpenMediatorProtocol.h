@@ -2,7 +2,7 @@
 //  AOPRouterOpenMediatorProtocol.h
 //  AOPRouter
 //
-//  Created by air on 2018/10/9.
+//  Copyright © 2018 aopod ( http://www.aopod.com ). All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
