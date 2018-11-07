@@ -25,66 +25,6 @@
     return AOPRouterOpenMediator.open;
 }
 
-#pragma mark - Public Interfaces
-
-+ (void)open:(NSString *)urlString
-{
-    [self open:urlString animated:YES];
-}
-
-+ (void)open:(NSString *)urlString animated:(BOOL)animated
-{
-    [self openInternal:urlString parameters:nil animated:animated forcePublic:YES];
-}
-
-#pragma mark - Private Interfaces
-
-+ (void)openInternal:(NSString *)urlString
-{
-    [self openInternal:urlString animated:YES];
-}
-
-+ (void)openInternal:(NSString *)urlString animated:(BOOL)animated
-{
-    [self openInternal:urlString parameters:nil animated:animated forcePublic:NO];
-}
-
-+ (void)openInternal:(NSString *)urlString parameters:(NSDictionary *)parameters
-{
-    [self openInternal:urlString parameters:parameters animated:YES];
-}
-
-+ (void)openInternal:(NSString *)urlString parameters:(NSDictionary *)parameters animated:(BOOL)animated
-{
-    [self openInternal:urlString parameters:parameters animated:animated forcePublic:NO];
-}
-
-+ (void)openInternal:(NSString *)urlString parameters:(NSDictionary *)parameters animated:(BOOL)animated forcePublic:(BOOL)forcePublic
-{
-    NSURL *url = [NSURL URLWithString:urlString];
-    NSMutableDictionary *mParameters = ({
-        NSMutableDictionary *queries = @{}.mutableCopy;
-        if (url) {
-            NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
-            NSArray *queryItems = urlComponents.queryItems;
-            for (NSURLQueryItem *queryItem in queryItems) {
-                [queries setValue:queryItem.value forKey:queryItem.name];
-            }
-        }
-        queries;
-    });
-    // Parameters passed in have higher priorities than queries in URL
-    if ([parameters isKindOfClass:NSDictionary.class]) {
-        [mParameters addEntriesFromDictionary:parameters];
-    }
-    AOPRouterContext *context = AOPRouterContext.new;
-    context.url = url;
-    context.parameters = mParameters.copy;
-    context.animated = animated;
-    context.forcePublic = forcePublic;
-    [self openInternalWithContext:context];
-}
-
 + (void)openInternalWithContext:(AOPRouterContext *)context
 {
     [self performSelectorOnMainThread:@selector(_openInternalWithContext:) withObject:context waitUntilDone:NO];
@@ -184,5 +124,71 @@
     [invocation invoke];
     return invocation;
 }
+
+#pragma mark Deprecated
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
+
+#pragma mark - Public Interfaces
+
++ (void)open:(NSString *)urlString
+{
+    [self open:urlString animated:YES];
+}
+
++ (void)open:(NSString *)urlString animated:(BOOL)animated
+{
+    [self openInternal:urlString parameters:nil animated:animated forcePublic:YES];
+}
+
+#pragma mark - Private Interfaces
+
++ (void)openInternal:(NSString *)urlString
+{
+    [self openInternal:urlString animated:YES];
+}
+
++ (void)openInternal:(NSString *)urlString animated:(BOOL)animated
+{
+    [self openInternal:urlString parameters:nil animated:animated forcePublic:NO];
+}
+
++ (void)openInternal:(NSString *)urlString parameters:(NSDictionary *)parameters
+{
+    [self openInternal:urlString parameters:parameters animated:YES];
+}
+
++ (void)openInternal:(NSString *)urlString parameters:(NSDictionary *)parameters animated:(BOOL)animated
+{
+    [self openInternal:urlString parameters:parameters animated:animated forcePublic:NO];
+}
+
++ (void)openInternal:(NSString *)urlString parameters:(NSDictionary *)parameters animated:(BOOL)animated forcePublic:(BOOL)forcePublic
+{
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSMutableDictionary *mParameters = ({
+        NSMutableDictionary *queries = @{}.mutableCopy;
+        if (url) {
+            NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
+            NSArray *queryItems = urlComponents.queryItems;
+            for (NSURLQueryItem *queryItem in queryItems) {
+                [queries setValue:queryItem.value forKey:queryItem.name];
+            }
+        }
+        queries;
+    });
+    // Parameters passed in have higher priorities than queries in URL
+    if ([parameters isKindOfClass:NSDictionary.class]) {
+        [mParameters addEntriesFromDictionary:parameters];
+    }
+    AOPRouterContext *context = AOPRouterContext.new;
+    context.url = url;
+    context.parameters = mParameters.copy;
+    context.animated = animated;
+    context.forcePublic = forcePublic;
+    [self openInternalWithContext:context];
+}
+#pragma clang diagnostic pop
 
 @end

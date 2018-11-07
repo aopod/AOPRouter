@@ -46,7 +46,7 @@
     return block;
 }
 
-- (id<AOPRouterOpenMediator> (^)(BOOL))enableInternal
+- (id<AOPRouterOpenMediator> (^)(BOOL))accessInternal
 {
     __weak typeof(self) weakSelf = self;
     id<AOPRouterOpenMediator> (^block)(BOOL) = ^id<AOPRouterOpenMediator>(BOOL enabled) {
@@ -113,5 +113,14 @@
     };
     return block;
 }
+
+#pragma mark Deprecated
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
+- (id<AOPRouterOpenMediator> (^)(BOOL))enableInternal
+{
+    return self.accessInternal;
+}
+#pragma clang diagnostic pop
 
 @end

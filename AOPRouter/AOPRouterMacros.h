@@ -133,3 +133,5 @@ _AOPRouterDuplicationCheck(SCHEME,HOST,##__VA_ARGS__) \
 
 #define AOPRouterHandleVC self.class context:context
 
+#define AOPRouterDeprecated(REPLCAEMENT) NS_DEPRECATED(1_0,1_0,2_0,2_0,REPLCAEMENT)
+
