@@ -23,10 +23,15 @@
 {
     id<AOPRouterOpenMediator> (^block)(NSString *) = ^id<AOPRouterOpenMediator>(NSString *urlString) {
         AOPRouterOpenMediator *obj = AOPRouterOpenMediator.new;
-        obj.context = AOPRouterContext.new;
-        obj.context.url = [NSURL URLWithString:urlString];
-        obj.context.animated = NO;
-        obj.context.forcePublic = NO;
+        obj.context = ({
+            NSURL *url = [NSURL URLWithString:urlString];
+            AOPRouterContext *context = AOPRouterContext.new;
+            context.url = url;
+            context.parameters = [self _queriesFromURL:url];
+            context.animated = NO;
+            context.forcePublic = YES;
+            context;
+        });
         dispatch_async(dispatch_get_main_queue(), ^{
             [AOPRouter openInternalWithContext:obj.context];
         });
@@ -66,7 +71,7 @@
             return self;
         }
         NSMutableDictionary *parameters = @{}.mutableCopy;
-        [parameters setObject:value forKeyedSubscript:key];
+        parameters[key] = value;
         self.context.parameters = parameters;
         return self;
     };
@@ -78,7 +83,7 @@
     __weak typeof(self) weakSelf = self;
     id<AOPRouterOpenMediator> (^block)(NSDictionary *) = ^id<AOPRouterOpenMediator>(NSDictionary *parameters) {
         __strong typeof(weakSelf) self = weakSelf;
-        if (parameters && ![parameters isKindOfClass:NSDictionary.class]) {
+        if (![parameters isKindOfClass:NSDictionary.class]) {
             return self;
         }
         self.context.parameters = parameters;
@@ -87,7 +92,7 @@
     return block;
 }
 
-- (id<AOPRouterOpenMediator> (^)(id<NSCopying>, id))setParameter
+- (id<AOPRouterOpenMediator> (^)(id<NSCopying>, __nullable id))setParameter
 {
     __weak typeof(self) weakSelf = self;
     id<AOPRouterOpenMediator> (^block)(id<NSCopying>, id) = ^id<AOPRouterOpenMediator>(id<NSCopying> key, id value) {
@@ -96,7 +101,7 @@
             return self;
         }
         NSMutableDictionary *parameters = (self.context.parameters ?: @{}).mutableCopy;
-        [parameters setObject:value forKeyedSubscript:key];
+        [parameters setObject:value forKey:key];
         self.context.parameters = parameters;
         return self;
     };
@@ -112,6 +117,21 @@
         return self;
     };
     return block;
+}
+
+#pragma mark - Private
+
++ (NSDictionary *)_queriesFromURL:(NSURL *)url
+{
+    NSMutableDictionary *queries = @{}.mutableCopy;
+    if (url) {
+        NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
+        NSArray *queryItems = urlComponents.queryItems;
+        for (NSURLQueryItem *queryItem in queryItems) {
+            [queries setValue:queryItem.value forKey:queryItem.name];
+        }
+    }
+    return queries;
 }
 
 #pragma mark Deprecated
