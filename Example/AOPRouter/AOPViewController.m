@@ -38,16 +38,13 @@
     self.data = @[].mutableCopy;
     
     [self.data addObject:[AOPDataModel modelWithTitle:@"Go to Blog" action:^{
-        [AOPRouter open:kAOPRouterPath(aop_blog_open)];
+        AOPRouterOpen(aop_blog_open);
     }]];
     [self.data addObject:[AOPDataModel modelWithTitle:@"Miss handler" action:^{
-        [AOPRouter open:@"aop://log/does/not/exist"];
+        AOPRouter.open(@"aop://log/does/not/exist");
     }]];
     [self.data addObject:[AOPDataModel modelWithTitle:@"Log message" action:^{
-        [AOPRouter openInternal:kAOPRouterPath(aop_log)
-                     parameters:@{
-                                  @"message": @"Hello, World!"
-                                  } animated:NO];
+        AOPRouterOpen(aop_log).accessInternal(YES).parameter(@"message", @"Hello, World!").animated(NO);
     }]];
     __weak typeof(self) weakSelf = self;
     [self.data addObject:[AOPDataModel modelWithTitle:@"Present viewController" action:^{
@@ -55,21 +52,10 @@
         if (!strongSelf) {
             return;
         }
-        [AOPRouter openInternal:kAOPRouterPath(aop_vc_present)
-                     parameters:@{
-                                  @"from": strongSelf,
-                                  }
-                       animated:YES];
+        AOPRouterOpen(aop_vc_present).accessInternal(YES).parameter(@"from", strongSelf).animated(YES);
     }]];
     [self.data addObject:[AOPDataModel modelWithTitle:@"Redirect" action:^{
         AOPRouterOpen(aop_blog_redirect);
-    }]];
-    [self.data addObject:[AOPDataModel modelWithTitle:@"AOPRouter.open" action:^{
-        __strong typeof(weakSelf) strongSelf = weakSelf;
-        if (!strongSelf) {
-            return;
-        }
-        AOPRouter.open(kAOPRouterPath(aop_vc_present)).animated(NO).parameter(@"from", strongSelf);
     }]];
     [self.data addObject:[AOPDataModel modelWithTitle:@"Using `handle` to present a ViewController" action:^{
         __strong typeof(weakSelf) strongSelf = weakSelf;
